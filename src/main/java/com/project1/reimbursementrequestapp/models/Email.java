@@ -20,7 +20,7 @@ public class Email {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
 
-    private String dateTime;
+    private String date;
     private String recipient; //
     private String sender;   //
     private String subject;

@@ -1,11 +1,11 @@
 package com.project1.reimbursementrequestapp.services;
 
-import com.project1.reimbursementrequestapp.ReimbursementRequestApplication;
 import com.project1.reimbursementrequestapp.dtos.ReimbursementDTO;
 import com.project1.reimbursementrequestapp.models.Email;
 import com.project1.reimbursementrequestapp.models.Employee;
 import com.project1.reimbursementrequestapp.models.Manager;
 import com.project1.reimbursementrequestapp.models.Reimbursement;
+import com.project1.reimbursementrequestapp.repositories.EmailRepository;
 import com.project1.reimbursementrequestapp.repositories.EmployeeRepository;
 import com.project1.reimbursementrequestapp.repositories.ManagerRepository;
 import com.project1.reimbursementrequestapp.repositories.ReimbursementRepo;
@@ -13,12 +13,8 @@ import lombok.Setter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.SpringApplication;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
-import org.springframework.web.server.ResponseStatusException;
 
 import javax.transaction.Transactional;
 import java.time.LocalDateTime;
@@ -29,8 +25,14 @@ import java.time.format.DateTimeFormatter;
 public class ReimbursementService {
 
     final Logger logger = LoggerFactory.getLogger(ReimbursementService.class);
+    private RestTemplate restTemplate = new RestTemplate();
+    private String baseUrl = "http://localhost:9091/emails/new";
 
+    @Setter(onMethod =@__({@Autowired}) )
     private ReimbursementRepo reimbursementRepo;
+
+    @Setter(onMethod =@__({@Autowired}) )
+    private EmailRepository emailRepository;
 
     @Setter(onMethod =@__({@Autowired}) )
     private EmployeeRepository employeeRepository;
@@ -43,13 +45,9 @@ public class ReimbursementService {
         this.reimbursementRepo = reimbursementRepo;
     }
 
-//    public void findById(int id) {
-//        if (id <= 0 ) {
-//            return "No reimbursement exists";
-//        } else {
-//            reimbursementRepo.findById(id);
-//        }
-//    }
+    public void saveReimbursement(Reimbursement reimbursement) {
+        reimbursementRepo.save(reimbursement);
+    }
 
     /**
      * Converts and saves the incoming dto into a reimbursement instance
@@ -63,9 +61,6 @@ public class ReimbursementService {
 
         logger.debug("Get all employee via full name: {}", employeeRepository.findByFullName(employeeName));
         logger.debug("Get all manager via full name: {}", employeeRepository.findByFullName(managerName));
-//
-//        System.out.println(req.getEmployee_fullName());
-//        System.out.println(req.getManager_fullName());
 
         Employee employee = employeeRepository.findByFullName(employeeName);
         Manager manager = managerRepository.findByFullName(managerName);
@@ -78,33 +73,26 @@ public class ReimbursementService {
         LocalDateTime now = LocalDateTime.now();
         String dateTime = formatter.format(now);
 
-        Reimbursement newReimbursement = new Reimbursement(0, date, description, amount, "Pending", dateTime, employee, manager);
+        Reimbursement newReimbursement = new Reimbursement();
+        newReimbursement.setDate(date);
+        newReimbursement.setDescription(description);
+        newReimbursement.setAmount(amount);
+        newReimbursement.setSubmitDate(dateTime);
+        newReimbursement.setStatus("Pending");
+        newReimbursement.setEmployee(employee);
+        newReimbursement.setManager(manager);
 
         reimbursementRepo.save(newReimbursement);
 
         // create new email
-        Email email = new Email(
-                0,
-                dateTime,
-                manager.getEmail(),
-                employee.getEmail(),
-                "New Reimbursement Request",
-                newReimbursement.toString()
-        );
-        RestTemplate restTemplate = new RestTemplate();
-        ResponseEntity<Email> newEmail = restTemplate.postForEntity(
-                "http://localhost:9091/emails/new",
-                email,
-                Email.class
-        );
-        System.out.println(newEmail.getBody());
-//
-//        System.out.println(email);
-//        boolean success = reimbursementRepo.save(newReimbursement);
-//
-//        if (success == false) {
-//            throw new ResponseStatusException(HttpStatus.I_AM_A_TEAPOT, "Hmm...Something isn't right.");
-//        }
+        Email email = new Email();
+        email.setDate(dateTime);
+        email.setRecipient(employee.getEmail());
+        email.setSender(manager.getEmail());
+        email.setSubject("New Reimbursement Request");
+        email.setContent(newReimbursement.toString());
+
+        emailRepository.save(email);
     }
 
     /**
@@ -120,8 +108,8 @@ public class ReimbursementService {
 
         String status = dto.getStatus();
 
-        logger.debug("Status: {}", managerRepository.findByFullName(managerName));
-        logger.debug("Find manger via full name: {}", dto.getStatus());
+        logger.debug("Status: {}", dto.getStatus());
+        logger.debug("Find manger via full name: {}", managerRepository.findByFullName(managerName));
         logger.debug("Reimbursement id: {}", id);
 
         reimbursementRepo.updateReimbursementById(status, manager, id);
@@ -133,20 +121,13 @@ public class ReimbursementService {
 
         String content = "A recent change has been made on your reimbursement request, ID: " + id;
 
-        Email email = new Email(
-                0,
-                dateTime,
-                employee.getEmail(),
-                manager.getEmail(),
-                "Update on Reimbursement Request",
-                content
-        );
-        RestTemplate restTemplate = new RestTemplate();
-        ResponseEntity<Email> newEmail = restTemplate.postForEntity(
-                "http://localhost:9091/emails/new",
-                email,
-                Email.class
-        );
-        System.out.println(newEmail.getBody());
+        Email email = new Email();
+        email.setDate(dateTime);
+        email.setRecipient(employee.getEmail());
+        email.setSender(manager.getEmail());
+        email.setSubject("Update on Reimbursement Request");
+        email.setContent(content);
+
+        emailRepository.save(email);
     }
 }

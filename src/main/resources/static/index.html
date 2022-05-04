@@ -1,10 +1,27 @@
 <!DOCTYPE html>
-<html lang="en">
+<html xmlns:th="http://www.thymeLeaf.org">
 <head>
     <meta charset="UTF-8">
     <title>Reimbursement App</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <link rel="stylesheet" href="styles.css">
+
 </head>
 <body>
-    <h1>Hello, World!</h1>
+    <div class="hello-world">
+        <h1>Hello, World!</h1>
+        <div>
+            <h1>New Reimbursement Request</h1>
+            <form action="#" th:action="@{/new}" th:object="${dto}" method="post">
+                <p>Date: <input type="date" th:field="*{date}" /></p>
+                <p>Description: <input type="text" th:field="*{description}" /></p>
+                <p>Amount: <input type="number" th:field="*{amount}" /></p>
+                <p>Name: <input type="text" th:field="*{employee_fullName}" /></p>
+                <p>Manager: <input type="text" th:field="*{manager_fullName}" /></p>
+                <p><input type="submit" value="Submit" /> <input type="reset" value="Reset" /></p>
+            </form>
+        </div>
+    </div>
+
 </body>
 </html>

@@ -1,0 +1,63 @@
+<!DOCTYPE HTML>
+<html xmlns:th="https://www.thymeleaf.org">
+<head>
+    <title>Reimbursement Requests</title>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <style>
+        input:focus, textarea:focus, select:focus{
+            outline: none;
+        }
+
+        .btn {
+            padding: 10px 20px;
+            border: none;
+            margin: 15px 0;
+            border-radius: 5px;
+            background-color:#F9A300;
+            color: white;
+            font-weight: bold;
+        }
+    </style>
+
+</head>
+<body>
+    <div class="mx-5 my-5">
+        <div style="margin-top: 50px; width: 50vw; display:block; margin-left: auto; margin-right: auto;">
+            <h1 style="margin-bottom: 20px; text-align: center;">New Reimbursement Request</h1>
+            <form action="#" th:action="@{/reimbursements/new}" th:object="${dto}" method="post">
+                <div class="form-group">
+                    <label>Description:</label>
+                    <input class="form-control" type="text" th:field="*{description}" />
+                </div>
+
+                <div class="form-group">
+                    <label>Date:</label>
+                    <input class="form-control" type="date" th:field="*{date}" th:attr="max=${#dates.format(#dates.createNow(), 'yyyy-MM-dd')}"/>
+                </div>
+
+                <div class="form-group">
+                    <label>Amount:</label>
+                    <input class="form-control" type="number" min="0" step="0.01" th:field="*{amount}" />
+                </div>
+
+                <div class="form-group">
+                    <label>Claimee Name:</label>
+                    <input class="form-control" type="text" th:field="*{employee_fullName}" />
+                </div>
+
+                <div class="form-group">
+                    <label>Manager:</label>
+                    <select class="form-control" th:field="*{manager_fullName}">
+                        <option  th:each="manager : ${managers}" th:value="${manager.fullName}" th:text="${manager.fullName}"></option>
+                    </select>
+                </div>
+                <input class="btn" type="submit" value="Submit" /> <input class="btn" type="reset" value="Reset" />
+            </form>
+        </div>
+    </div>
+
+</body>
+</html>
+
+

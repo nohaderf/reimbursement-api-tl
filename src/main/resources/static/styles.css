@@ -1,0 +1,39 @@
+body {
+    margin: 100px 200px;
+}
+
+.hello-world {
+  text-align: center;
+   margin: auto;
+    width: 50%;
+}
+
+.btn {
+    margin: 25px 0px;
+    border: none;
+    background-color: #F9A300;
+    padding: 5px 15px;
+}
+
+
+button.change {
+    background-color: #F88F00;
+    border: none;
+    height: 40px;
+    padding: 5px 15px;
+    color: #ffffff;
+    font-size: 16px;
+    font-weight: 300;
+    margin-top: 10px;
+    margin-right: 10px;
+}
+
+button.change:hover {
+    cursor: pointer;
+    background-color: #F89900;
+}
+
+button:active {
+    outline: none;
+    border: none;
+}

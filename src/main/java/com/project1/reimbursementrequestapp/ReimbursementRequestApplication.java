@@ -17,17 +17,7 @@ public class ReimbursementRequestApplication {
 	EmployeeRepository employeeRepository;
 
 	public static void main(String[] args) {
-		final Logger logger = LoggerFactory.getLogger(ReimbursementRequestApplication.class);
 		SpringApplication.run(ReimbursementRequestApplication.class, args);
-//		logger.warn("employee id: {}", employeeRepository.getById(1));
 	}
 
-//	@Bean
-//	CommandLineRunner runner() {
-//		return args -> {
-//			for (Employee e : employeeRepository.findAll()) {
-//				System.out.println(e);
-//			}
-//		};
-//	}
 }

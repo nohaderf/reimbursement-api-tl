@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeLeaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Reimbursement Requests</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <style>
+        .main-container {
+            margin: 75px 50px;
+        }
+    </style>
+
+</head>
+<body>
+    <div class="main-container">
+        <h1 style=" margin-top: 85px; margin-bottom: 25px; z-index: 5;">Reimbursement Requests</h1>
+        <p style="position: absolute; top: 30px; color: #a9a9a9; font-size: 50px; font-weight: bold; z-index: 0;">ALL</p>
+        <table class="table">
+            <thead>
+                <tr>
+                    <th scope="col">ID</th>
+                    <th scope="col">Description</th>
+                    <th scope="col">Date</th>
+                    <th scope="col">Amount</th>
+                    <th scope="col">Status</th>
+                    <th scope="col">Submitted On</th>
+                    <th scope="col">Submitted By</th>
+                    <th scope="col">Submitted To</th>
+                </tr>
+            </thead>
+            <tbody>
+            <tr th:each="r: ${reimbursement}">
+                <td th:text="${r.id}"/>
+                <td th:text="${r.description}"/>
+                <td th:text="${r.date}"/>
+                <td th:text="${r.amount}"/>
+                <td th:text="${r.status}"/>
+                <td th:text="${r.submitDate}"/>
+                <td th:text="${r.employee.fullName}"/>
+                <td th:text="${r.manager.fullName}"/>
+            </tr>
+        </table>
+    </div>
+</body>
+</html>

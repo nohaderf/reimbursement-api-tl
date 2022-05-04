@@ -43,7 +43,7 @@ class ReimbursementTests {
     }
 
     @Test
-    void shoudGetDescription() {
+    void shouldGetDescription() {
         assertEquals("Dinner", reimbursement.getDescription());
     }
 

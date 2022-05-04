@@ -1,9 +1,9 @@
 package com.project1.reimbursementrequestapp.models;
 
-import com.project1.reimbursementrequestapp.repositories.EmployeeRepository;
 import lombok.*;
 
 import javax.persistence.*;
+import javax.validation.constraints.Min;
 
 @Entity
 @Table(name="Reimbursements")
@@ -16,12 +16,12 @@ import javax.persistence.*;
 @Builder
 public class Reimbursement {
 
-    @Id // treat this state as the primary key
+    @Id
     @Column(name="id", columnDefinition = "AUTO_INCREMENT")
-    @GeneratedValue(strategy = GenerationType.IDENTITY) //GenerationType.AUTO
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
 
-    @Column(name = "date", nullable = false) // column in DB table, can't be null
+    @Column(name = "date", nullable = false)
     private String date;
     private String description;
     private double amount;
